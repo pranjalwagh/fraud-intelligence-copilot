@@ -1,0 +1,30 @@
+-- PAYSIM table + data load
+-- The raw dataset (PS_20174392719_1491204439457_log.csv, the Kaggle PaySim fraud
+-- simulation dataset, ~470MB / 6.36M rows) is NOT committed to this repo (see .gitignore).
+-- Download it separately and place it at the repo root before running scripts/load_paysim_data.py.
+
+USE DATABASE FRAUD_HACKATHON;
+USE SCHEMA RAW;
+
+CREATE OR REPLACE TABLE PAYSIM (
+    STEP NUMBER(38,0),
+    TYPE VARCHAR(16777216),
+    AMOUNT FLOAT,
+    NAMEORIG VARCHAR(16777216),
+    OLDBALANCEORG FLOAT,
+    NEWBALANCEORIG FLOAT,
+    NAMEDEST VARCHAR(16777216),
+    OLDBALANCEDEST FLOAT,
+    NEWBALANCEDEST FLOAT,
+    ISFRAUD NUMBER(38,0),
+    ISFLAGGEDFRAUD NUMBER(38,0)
+);
+
+CREATE STAGE IF NOT EXISTS PAYSIM_STAGE
+  FILE_FORMAT = (TYPE = CSV FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1);
+
+-- Upload + load: run scripts/load_paysim_data.py (does the PUT + COPY INTO below)
+-- COPY INTO FRAUD_HACKATHON.RAW.PAYSIM
+-- FROM @FRAUD_HACKATHON.RAW.PAYSIM_STAGE
+-- FILE_FORMAT = (TYPE = CSV FIELD_OPTIONALLY_ENCLOSED_BY = '"' SKIP_HEADER = 1)
+-- ON_ERROR = ABORT_STATEMENT;

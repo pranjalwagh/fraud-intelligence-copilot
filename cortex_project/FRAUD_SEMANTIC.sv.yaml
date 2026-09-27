@@ -1,0 +1,69 @@
+name: FRAUD_SEMANTIC
+description: Semantic model over the PaySim fraud-flags view, exposing transaction dimensions and fraud detection metrics for natural-language analysis.
+tables:
+  - name: FRAUD_FLAGS
+    base_table:
+      database: FRAUD_HACKATHON
+      schema: RAW
+      table: FRAUD_FLAGS
+    dimensions:
+      - name: TYPE
+        expr: '"TYPE"'
+        data_type: VARCHAR
+        synonyms: [transaction type, txn type, transfer type]
+        description: The type of transaction, e.g. PAYMENT, TRANSFER, CASH_OUT, CASH_IN, DEBIT.
+      - name: NAMEORIG
+        expr: NAMEORIG
+        data_type: VARCHAR
+        synonyms: [origin account, sender, originating customer]
+        description: Identifier of the account that originated the transaction.
+      - name: NAMEDEST
+        expr: NAMEDEST
+        data_type: VARCHAR
+        synonyms: [destination account, recipient, receiving customer]
+        description: Identifier of the account that received the transaction.
+      - name: IS_BALANCE_DRAIN
+        expr: IS_BALANCE_DRAIN
+        data_type: BOOLEAN
+        synonyms: [flagged, suspicious, balance drained, account emptied, drained account]
+        description: True when the transaction is a TRANSFER or CASH_OUT that emptied the origin account (amount equals the pre-transaction origin balance within 0.01, and that balance was greater than 0).
+      - name: IS_OVERNIGHT
+        expr: IS_OVERNIGHT
+        data_type: BOOLEAN
+        synonyms: [overnight, late night, off-hours, nighttime transaction]
+        description: True when the transaction occurred during the overnight window (simulation step modulo 24 between 0 and 8).
+      - name: RISK_SCORE
+        expr: RISK_SCORE
+        data_type: NUMBER
+        synonyms: [flagged score, suspicious score, fraud risk score, risk level]
+        description: Simple additive risk score for the transaction, 2 points for the balance-drain flag plus 1 point for the overnight flag (range 0-3).
+    facts:
+      - name: AMOUNT
+        expr: AMOUNT
+        data_type: FLOAT
+        description: Transaction amount.
+      - name: ISFRAUD
+        expr: ISFRAUD
+        data_type: NUMBER
+        description: Ground-truth label indicating whether the transaction is actually fraudulent (1) or not (0).
+    metrics:
+      - name: TOTAL_TRANSACTIONS
+        expr: COUNT(*)
+        synonyms: [transaction count, number of transactions, total txns]
+        description: Total number of transactions in the dataset, regardless of fraud status. Use this as the denominator for rate calculations.
+      - name: TOTAL_FRAUD
+        expr: SUM(ISFRAUD)
+        synonyms: [total fraud cases, fraud count, number of fraudulent transactions]
+        description: Total count of transactions with a confirmed ISFRAUD label of 1. This is the ground-truth count of actual fraud.
+      - name: FRAUD_RATE
+        expr: AVG(ISFRAUD)
+        synonyms: [fraud percentage, fraud proportion, share of fraud]
+        description: Average of ISFRAUD across transactions, i.e. the fraction (0 to 1) of transactions that are actually fraudulent. Multiply by 100 for a percentage.
+      - name: TOTAL_AMOUNT
+        expr: SUM(AMOUNT)
+        synonyms: [total transaction value, sum of amounts, total money moved]
+        description: Sum of transaction amounts. Can be combined with fraud-related dimensions/metrics to see how much money is tied up in fraudulent activity.
+      - name: FLAGGED_TRANSACTIONS
+        expr: COUNT(CASE WHEN RISK_SCORE >= 2 THEN 1 END)
+        synonyms: [suspicious transaction count, flagged count, high-risk transactions]
+        description: Count of transactions considered flagged/suspicious, defined as RISK_SCORE of 2 or higher (i.e. the balance-drain condition is present).

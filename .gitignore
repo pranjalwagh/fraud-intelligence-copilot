@@ -1,0 +1,34 @@
+# Raw dataset — too large for git (GitHub blocks files >100MB anyway).
+# Download separately and place at the repo root before running scripts/load_paysim_data.py.
+PS_20174392719_1491204439457_log.csv
+*.csv
+
+# Snowflake / Cortex Code local state — never commit credentials or caches.
+.snowflake/
+connections.toml
+*.toml.bak
+cortex_project/.cortex/
+
+# Streamlit local secrets (never commit credentials).
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Scratch/temp files used during development
+_*.py
+_*.yaml
+_*.json

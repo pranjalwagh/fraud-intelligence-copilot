@@ -1,0 +1,7 @@
+version: 1
+artifacts:
+  - path: FRAUD_SEMANTIC.sv.yaml
+    type: semantic_view
+    targets:
+      default:
+        object: FRAUD_HACKATHON.RAW.FRAUD_SEMANTIC
