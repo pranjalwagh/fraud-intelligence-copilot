@@ -3,10 +3,12 @@
 -- Deploy/update it with the Cortex Code CLI (recommended, keeps cortex-project.yaml
 -- tracking in sync):
 --
---   cortex agent-studio sv-deploy --file-path cortex_project/FRAUD_SEMANTIC.sv.yaml ^
---     --fqn FRAUD_HACKATHON.RAW.FRAUD_SEMANTIC
+--   cortex agent-studio sv-deploy --file-path cortex_project/FRAUD_SEMANTIC.sv.yaml --fqn FRAUD_HACKATHON.RAW.FRAUD_SEMANTIC
 --
 -- This creates/replaces the semantic view FRAUD_HACKATHON.RAW.FRAUD_SEMANTIC over
 -- the FRAUD_FLAGS view, exposing:
---   Dimensions: TYPE, NAMEORIG, NAMEDEST, IS_BALANCE_DRAIN, IS_OVERNIGHT, RISK_SCORE
---   Metrics: TOTAL_TRANSACTIONS, TOTAL_FRAUD, FRAUD_RATE, TOTAL_AMOUNT, FLAGGED_TRANSACTIONS
+--   Dimensions: TYPE, NAMEORIG, NAMEDEST, STEP, IS_BALANCE_DRAIN, IS_OVERNIGHT, RISK_SCORE
+--   Facts: AMOUNT, ISFRAUD, ISFLAGGEDFRAUD, OLDBALANCEORG, NEWBALANCEORIG, OLDBALANCEDEST, NEWBALANCEDEST
+--   Metrics: TOTAL_TRANSACTIONS, TOTAL_FRAUD, FRAUD_RATE, TOTAL_AMOUNT, FLAGGED_TRANSACTIONS,
+--            BASELINE_FLAGGED_TRANSACTIONS, PRECISION, RECALL
+

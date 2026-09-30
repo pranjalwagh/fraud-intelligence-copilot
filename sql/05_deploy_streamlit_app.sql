@@ -6,13 +6,15 @@
 
 USE DATABASE FRAUD_HACKATHON;
 USE SCHEMA RAW;
+USE WAREHOUSE FRAUD_WH;
 
--- 1. Stage that holds the app source files.
+-- 1. Stage that holds the app source files. No FILE_FORMAT needed -- this
+--    stage holds Python/YAML source files, not CSV data (unlike PAYSIM_STAGE).
 CREATE STAGE IF NOT EXISTS FRAUD_COPILOT_STAGE
-  DIRECTORY = (ENABLE = TRUE)
-  FILE_FORMAT = (TYPE = 'CSV');
+  DIRECTORY = (ENABLE = TRUE);
 
--- Upload files to the stage first, e.g.:
+-- Upload files to the stage first (run from the repo root so the relative
+-- paths below resolve):
 --   PUT 'file://streamlit_app/fraud_copilot_streamlit_app.py' @FRAUD_COPILOT_STAGE OVERWRITE=TRUE AUTO_COMPRESS=FALSE;
 --   PUT 'file://streamlit_app/environment.yml' @FRAUD_COPILOT_STAGE OVERWRITE=TRUE AUTO_COMPRESS=FALSE;
 --   ALTER STAGE FRAUD_COPILOT_STAGE REFRESH;

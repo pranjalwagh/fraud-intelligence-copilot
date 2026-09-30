@@ -8,6 +8,7 @@ PS_20174392719_1491204439457_log.csv
 connections.toml
 *.toml.bak
 cortex_project/.cortex/
+.cortex/
 
 # Streamlit local secrets (never commit credentials).
 .streamlit/secrets.toml
@@ -32,3 +33,8 @@ Thumbs.db
 _*.py
 _*.yaml
 _*.json
+
+# Internal review/report docs -- working notes from the development process,
+# not part of the hackathon submission itself.
+ISSUES.md
+PROJECT_REPORT.md
